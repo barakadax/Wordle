@@ -104,9 +104,10 @@ class Wordle:
         return response
 
     async def __root(self):
-        response = JSONResponse(content={'roles': 'add later'})
+        response = JSONResponse(content={'roles': 'Each guess must be a valid 5-letter word\n \
+                                         You will get back JSON with for each letter if placement is correct or not and if correct if in the right placement or not'})
         response.status_code = 200
         return response
     
     async def __http_exception_handler(self, request, exc):
-        return JSONResponse(status_code=404, content={'detail': 'None existent endpoint'})
+        return JSONResponse(status_code=404, content={'detail': 'None existing endpoint'})
