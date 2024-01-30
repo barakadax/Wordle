@@ -1,6 +1,7 @@
 import uvicorn
 from wordle import Wordle
+from config import config
 
 if __name__ == '__main__':
     wordle = Wordle()
-    uvicorn.run(wordle.app, host='127.0.0.1', port=8000)
+    uvicorn.run(wordle.app, host=config['ip'], port=config['port'])

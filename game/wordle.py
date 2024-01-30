@@ -49,9 +49,10 @@ class Wordle:
     
     def __game_logic(self, game: Game, user_input: str) -> JSONResponse:
         if game.retries == 0:
-            response = JSONResponse(content={'response': f'Game is already finish, word was: {game.target}'})
+            response = JSONResponse(content={'response': f'Game is finish, word was: {game.target}'})
             response.headers['statues'] = 'done'
             response.status_code = 200
+            game.has_won = False
         else:
             game.retries -= 1
 
@@ -59,6 +60,7 @@ class Wordle:
                 response = JSONResponse(content={'response': f'You win!!! the word was: {game.target}'})
                 response.headers['statues'] = 'won'
                 response.status_code = 200
+                game.has_won = True
             else:
                 result = { 'retries left': game.retries }
                 common_letters = list(set(user_input) & set(game.target))
@@ -89,7 +91,11 @@ class Wordle:
 
         if session in self.__cache:
             game = self.__cache[session]
-            response = self.__game_logic(game, user_input)
+            if game.has_won is None:
+                response = self.__game_logic(game, user_input)
+            else:
+                response = JSONResponse(content={'response': f'Game already finished the word was "{game.target}" and you have {"won" if game.has_won else "lost"}'})
+                response.status_code = 200
         else:
             response = JSONResponse(content={'response': 'this session doesn\'t exists'})
             response.headers['statues'] = 'deleted'
