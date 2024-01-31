@@ -33,7 +33,6 @@ or<br>
 
 ## TODO
 <ol>
-    <li>Correct returned status codes</li>
     <li>Add debug file for VSCode</li>
     <li>Testing</li>
     <li>Solver in Rust with Tokio</li>
