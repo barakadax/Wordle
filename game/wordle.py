@@ -49,7 +49,7 @@ class Wordle:
     
     def __game_logic(self, game: Game, user_input: str) -> JSONResponse:
         if game.retries == 0:
-            response = JSONResponse(content={'response': f'Game is finish, word was: {game.target}'})
+            response = JSONResponse(content={'response': f'Game is finished, word was: {game.target}'})
             response.headers['statues'] = 'done'
             response.status_code = 200
             game.has_won = False
@@ -80,13 +80,13 @@ class Wordle:
     async def __play(self, session: str, data: str = Body(...)):
         if len(data) != 5:
             response = JSONResponse(content={'response': 'Input must be 5 letters long'})
-            response.status_code = 200
+            response.status_code = 422
             return response
         
         user_input = unicodedata.normalize('NFKD', data).casefold()
         if user_input not in self.__words:
             response = JSONResponse(content={'response': 'Not an acceptable word'})
-            response.status_code = 200
+            response.status_code = 406
             return response
 
         if session in self.__cache:
@@ -95,7 +95,7 @@ class Wordle:
                 response = self.__game_logic(game, user_input)
             else:
                 response = JSONResponse(content={'response': f'Game already finished the word was "{game.target}" and you have {"won" if game.has_won else "lost"}'})
-                response.status_code = 200
+                response.status_code = 409
         else:
             response = JSONResponse(content={'response': 'this session doesn\'t exists'})
             response.headers['statues'] = 'deleted'
@@ -110,4 +110,6 @@ class Wordle:
         return response
     
     async def __http_exception_handler(self, request, exc):
-        return JSONResponse(status_code=404, content={'detail': 'None existing endpoint'})
+        response = JSONResponse(status_code=404, content={'detail': 'None existing endpoint'})
+        response.status_code = 405
+        return response
