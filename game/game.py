@@ -1,7 +1,8 @@
-from config import config
+from config import _config
+from typing import Optional
+from pydantic import BaseModel
 
-class Game(object):
-    def __init__(self, target: str) -> None:
-        self.retries = config['max_retries']
-        self.target = target
-        self.has_won = None
+class Game(BaseModel):
+    retries: int
+    target: str
+    has_won: Optional[bool]

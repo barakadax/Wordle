@@ -1,0 +1,13 @@
+{
+    "version": "0.0.1",
+    "configurations": [
+        {
+            "name": "game",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/game"
+        }
+    ]
+}

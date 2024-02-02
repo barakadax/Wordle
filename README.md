@@ -5,9 +5,12 @@ Mock of the game Wordle in Python Using FastApi with REST.
 ## How to run game
 First install
 <ul>
+    <li>pip install pydantic</li>
     <li>pip install fastapi</li>
     <li>pip install uvicorn</li>
     <li>pip install cachetools</li>
+    <li>pip install pytest</li>
+    <li>pip install importlib-metadata</li>
 </ul>
 To run you can:<br>
 *. python main.py<br>
@@ -33,7 +36,6 @@ or<br>
 
 ## TODO
 <ol>
-    <li>Add debug file for VSCode</li>
     <li>Testing</li>
     <li>Solver in Rust with Tokio</li>
     <li>Tests for solver</li>
