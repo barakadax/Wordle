@@ -2,14 +2,14 @@ import uuid
 import random
 import unicodedata
 from game import Game
-from config import _config
+from config import config
 from cachetools import TTLCache
 from fastapi import FastAPI, Body
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException
 
 class Wordle:
-    def __init__(self) -> None:
+    def __init__(self, config: config) -> None:
         self.app = FastAPI(
             title='Local Wordle',
             description='wordle',
@@ -27,10 +27,12 @@ class Wordle:
             }
         )
 
+        self.__config = config
+
         with open('../valid-wordle-words.txt', 'r') as file:
             self.__words = file.read().split()
 
-        self.__cache = TTLCache(maxsize=_config.max_games, ttl=_config.ttl)
+        self.__cache = TTLCache(maxsize=self.__config.max_games, ttl=self.__config.ttl)
 
         self.app.exception_handler(HTTPException)(self.__http_exception_handler)
         self.app.get('/')(self.__root)
@@ -41,7 +43,7 @@ class Wordle:
         new_session = str(uuid.uuid4())
         word = random.choice(self.__words)
         print(word)
-        self.__cache[new_session] = Game(retries=_config.max_retries, target=word, has_won=None)
+        self.__cache[new_session] = Game(retries=self.__config.max_retries, target=word, has_won=None)
 
         return JSONResponse(status_code=200, content={'session': new_session})
     

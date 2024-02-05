@@ -1,4 +1,3 @@
-from config import _config
 from typing import Optional
 from pydantic import BaseModel
 
