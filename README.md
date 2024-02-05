@@ -10,12 +10,19 @@ First install
     <li>pip install uvicorn</li>
     <li>pip install cachetools</li>
     <li>pip install pytest</li>
+    <li>pip install pytest-cov</li>
     <li>pip install importlib-metadata</li>
 </ul>
 To run you can:<br>
 *. python main.py<br>
 or<br>
 *. uvicorn main:app --reload
+
+### How to run game tests:
+Run: pytest
+
+## How to run game code coverage:
+Run: pytest --cov
 
 ## How to play
 <ul>
