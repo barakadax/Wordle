@@ -11,6 +11,7 @@ First install
     <li>pip install cachetools</li>
     <li>pip install pytest</li>
     <li>pip install pytest-cov</li>
+    <li>pip install httpx</li>
     <li>pip install importlib-metadata</li>
 </ul>
 To run you can:<br>
@@ -35,7 +36,7 @@ Run: pytest --cov
     <br>
     <li>
         Run this CURL with the key instead of {session} and replace the {word} with the word you want to use:
-        <br>curl --location --request GET 'http://127.0.0.1:8000/play/session/{session}' \
+        <br>curl --location --request POST 'http://127.0.0.1:8000/play/session/{session}' \
 --header 'Content-Type: text/plain' \
 --data '{word}'
     </li>
@@ -43,7 +44,7 @@ Run: pytest --cov
 
 ## TODO
 <ol>
-    <li>Testing</li>
+    <li>Think how to solve issue with test and known word to test all end cases</li>
     <li>Solver in Rust with Tokio</li>
     <li>Tests for solver</li>
     <li>UI</li>

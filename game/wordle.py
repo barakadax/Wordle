@@ -29,7 +29,7 @@ class Wordle:
 
         self.__config = config
 
-        with open('../valid-wordle-words.txt', 'r') as file:
+        with open(config.words_path, 'r') as file:
             self.__words = file.read().split()
 
         self.__cache = TTLCache(maxsize=self.__config.max_games, ttl=self.__config.ttl)
@@ -37,7 +37,7 @@ class Wordle:
         self.app.exception_handler(HTTPException)(self.__http_exception_handler)
         self.app.get('/')(self.__root)
         self.app.get('/start')(self.__start)
-        self.app.get('/play/session/{session}')(self.__play)
+        self.app.post('/play/session/{session}')(self.__play)
 
     async def __start(self) -> JSONResponse:
         new_session = str(uuid.uuid4())
@@ -88,8 +88,10 @@ class Wordle:
             game = self.__cache[session]
             if game.has_won is None:
                 return self.__game_logic(game, user_input)
+            
             return JSONResponse(status_code=208,
                                 content={'response': f'Game already finished the word was: {game.target} and you have {"won" if game.has_won else "lost"}'})
+        
         return JSONResponse(status_code=404,
                                     content={'response': 'this session doesn\'t exists'},
                                     headers={'statues': 'deleted'})
@@ -100,4 +102,4 @@ class Wordle:
                                          You will get a JSON back containing: A status for each letter, indicating whether the placement is correct or not.'})
     
     async def __http_exception_handler(self, request, exc):
-        return JSONResponse(status_code=404, content={'detail': 'None existing endpoint'})
+        return JSONResponse(status_code=404, content={'details': 'None existing endpoint'})
