@@ -1,0 +1,20 @@
+{
+    "version": "0.0.1",
+    "configurations": [
+        {
+            "name": "Solver",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/solver/target/debug/wordle_solver.exe",
+            "cwd": "${workspaceFolder}/solver"
+        },
+        {
+            "name": "Game",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/game"
+        }
+    ]
+}
