@@ -74,7 +74,7 @@ fn handle_retry(round: Retry, common_word: String, mut words: Vec<String>) ->  V
 pub async fn solve(mut _game: GameData) {
     let client = reqwest::Client::new();
 
-    for _ in 0..=4 {
+    for i in 0..=4 {
         let most_common_word = get_most_common_word(_game.words.clone());
 
         let response = make_request(&client, &_game.url, most_common_word.clone()).await;
@@ -84,13 +84,12 @@ pub async fn solve(mut _game: GameData) {
             if header_value.to_str().unwrap_or("Invalid header value") == "retry" {
                 let round_result =  process_response(response).await.unwrap();
 
-                println!("{}\n{}\n{}\n{}\n{}\n{}\n", round_result.retries, round_result.index_0,
-                round_result.index_1, round_result.index_2, round_result.index_3, round_result.index_4);
+                println!("Turn: {}\nMost likely word: {}\n", i + 1, most_common_word);
 
                 _game.words = handle_retry(round_result, most_common_word.clone(), _game.words);
             }
             else if header_value.to_str().unwrap_or("Invalid header value") == "won" {
-                println!("won");
+                println!("WON\nTurn: {}\nThe word was: {}\n", i + 1, most_common_word);
                 return; // Implement later
             }
             else if header_value.to_str().unwrap_or("Invalid header value") == "done" {
