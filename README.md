@@ -15,14 +15,14 @@ First install
     <li>pip install importlib-metadata</li>
 </ul>
 To run you can:<br>
-*. python main.py<br>
+Run: python main.py<br>
 or<br>
-*. uvicorn main:app --reload
+Run: uvicorn main:app --reload
 
 ### How to run game tests:
 Run: pytest
 
-## How to run game code coverage:
+### How to run game code coverage:
 Run: pytest --cov
 
 ## How to run solver:
