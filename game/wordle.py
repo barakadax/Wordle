@@ -42,10 +42,11 @@ class Wordle:
     async def __start(self) -> JSONResponse:
         new_session = str(uuid.uuid4())
         word = random.choice(self.__words)
-        self.__cache[new_session] = Game(retries=self.__config.max_retries, target=word, has_won=None)
+        self.__cache[new_session] = \
+            Game(retries=self.__config.max_retries, target=word, has_won=None)
 
         return JSONResponse(status_code=200, content={'session': new_session})
-    
+
     def __game_logic(self, game: Game, user_input: str) -> JSONResponse:
         if game.retries == 0:
             game.has_won = False
@@ -53,7 +54,7 @@ class Wordle:
             return JSONResponse(status_code=200,
                                 content={'response': f'Game is finished, word was: {game.target}'},
                                 headers={'statues': 'done'})
-        
+
         game.retries -= 1
 
         if user_input == game.target:
@@ -62,7 +63,7 @@ class Wordle:
             return JSONResponse(status_code=200,
                                 content={'response': f'You win!!! the word was: {game.target}'},
                                 headers={'statues': 'won'})
-        
+
         result = { 'retries left': game.retries }
         common_letters = list(set(user_input) & set(game.target))
         for counter, (input_char, target_char) in enumerate(zip(user_input, game.target)):
@@ -74,11 +75,12 @@ class Wordle:
                 result[counter] = 'wrong'
 
         return JSONResponse(status_code=200, content=result, headers={'statues': 'retry'})
-    
+
     async def __play(self, session: str, data: str = Body(...)) -> JSONResponse:
         if len(data) != 5:
-            return JSONResponse(status_code=400, content={'response': 'Input must be 5 letters long'})
-        
+            return JSONResponse(status_code=400,
+                                content={'response': 'Input must be 5 letters long'})
+
         user_input = unicodedata.normalize('NFKD', data).casefold()
         if user_input not in self.__words:
             return JSONResponse(status_code=403, content={'response': 'Not an acceptable word'})
@@ -87,18 +89,18 @@ class Wordle:
             game = self.__cache[session]
             if game.has_won is None:
                 return self.__game_logic(game, user_input)
-            
+
             return JSONResponse(status_code=208,
                                 content={'response': f'Game already finished the word was: {game.target} and you have {"won" if game.has_won else "lost"}'})
-        
+
         return JSONResponse(status_code=404,
-                                    content={'response': 'this session doesn\'t exists'},
-                                    headers={'statues': 'deleted'})
+                            content={'response': 'this session doesn\'t exists'},
+                            headers={'statues': 'deleted'})
 
     async def __root(self) -> JSONResponse:
         return JSONResponse(status_code=200,
                                 content={'roles': 'Each guess must be a valid 5-letter word, \
                                          You will get a JSON back containing: A status for each letter, indicating whether the placement is correct or not.'})
-    
+
     async def __http_exception_handler(self, request, exc):
         return JSONResponse(status_code=404, content={'details': 'None existing endpoint'})

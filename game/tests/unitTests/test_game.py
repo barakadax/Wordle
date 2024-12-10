@@ -1,6 +1,5 @@
 import pytest
 from game import Game
-from typing import Optional
 
 def test_no_arguments_should_throw():
     with pytest.raises(ValueError):
